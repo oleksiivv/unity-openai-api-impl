@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using OpenAI;
 
 public class OpenAIController : MonoBehaviour
@@ -9,14 +10,33 @@ public class OpenAIController : MonoBehaviour
 
     private List<ChatMessage> messages = new List<ChatMessage>();
 
+    public InputField input;
+
+    public Text responseUI;
+
     // Start is called before the first frame update
     void Start()
     {
         openAIApi = new OpenAIApi();
+        
+        ChatMessage newMessage = new ChatMessage();
+        newMessage.Content = "Act like you are Anna De Armas character from The Blade Runner 2049, Joi";
+        newMessage.Role = "user";
 
+        messages.Add(newMessage);
+
+        CreateChatCompletionRequest request = new CreateChatCompletionRequest();
+        request.Messages = messages;
+        request.Model = "gpt-3.5-turbo-1106";
+        openAIApi.CreateChatCompletion(request);
     }
 
-    public async void AskAI(string text){
+    public async void AskAI(){
+        var text = input.text;
+        if(text.Length<2)return;
+
+        input.text = "";
+
         ChatMessage newMessage = new ChatMessage();
         newMessage.Content = text;
         newMessage.Role = "user";
@@ -35,6 +55,7 @@ public class OpenAIController : MonoBehaviour
             messages.Add(chatResponse);
 
             Debug.Log(chatResponse.Content);
+            responseUI.text = chatResponse.Content;
         } else {
             Debug.LogWarning("No text was generated from this prompt.");
         }
