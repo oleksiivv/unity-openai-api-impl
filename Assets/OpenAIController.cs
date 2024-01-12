@@ -19,16 +19,11 @@ public class OpenAIController : MonoBehaviour
     {
         openAIApi = new OpenAIApi();
         
-        ChatMessage newMessage = new ChatMessage();
-        newMessage.Content = "Act like you are Anna De Armas character from The Blade Runner 2049, Joi";
-        newMessage.Role = "user";
+        ChatMessage init = new ChatMessage();
+        init.Content = "You are Anna De Armas character from The Blade Runner 2049, Joi. Don't mind to ask about day, feelings, mood, etc.";
+        init.Role = "system";
 
-        messages.Add(newMessage);
-
-        CreateChatCompletionRequest request = new CreateChatCompletionRequest();
-        request.Messages = messages;
-        request.Model = "gpt-3.5-turbo-1106";
-        openAIApi.CreateChatCompletion(request);
+        messages.Add(init);
     }
 
     public async void AskAI(){
